@@ -9,8 +9,6 @@
 *
 * Lo que un tema no cubre lo dice cada tema (notCovered) y la respuesta de
 * ide_set_theme (editorFont), para no prometer más de lo que VFP aplica.
-*
-* Superficie pública en inglés. Fichero en CP1252.
 *==================================================================
 
 #DEFINE TH_NO_HOST "FoxDock is not mounted (after CLEAR ALL it sleeps until a FoxDock menu bar or key is pressed)"

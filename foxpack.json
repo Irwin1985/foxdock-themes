@@ -3,7 +3,7 @@
   "kind": "foxdock-plugin",
   "id": "themes",
   "foxdockApi": 1,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Color themes for the IDE: syntax colors, the editor font, and the font and colors of the main window",
   "license": "MIT",
   "files": [

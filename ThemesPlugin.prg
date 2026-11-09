@@ -50,14 +50,11 @@
 * "Nombre"=- para los que no existían), que el desinstalador importa con
 * reg.exe. «Restore VFP colors» lo borra: sin tema, no hay nada que deshacer.
 *
-* La suite pone FOXDOCK_THEMES_REGISTRY_ROOT para escribir en una clave suya
+* Las pruebas ponen FOXDOCK_THEMES_REGISTRY_ROOT para escribir en una clave suya
 * y no en la de VFP; entonces NO se llama a SYS(3056, 1), que releería (y
 * escribiría) el registro del VFP del usuario.
 *
 * nOrder 990: detrás de foxforge, para no mover los menús de antes.
-*
-* Superficie pública en inglés. Fichero en CP1252, con los acentos
-* escritos.
 *==================================================================
 
 #DEFINE CRLF CHR(13) + CHR(10)
@@ -68,11 +65,11 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 	cId = "themes"
 	cTitle = "Themes"
 	nOrder = 960
-	cVersion = "0.1.0"
+	cVersion = "0.1.1"
 	lWantsIdle = .T.
 
 	cFolder = ""          && la carpeta de los temas, con su \
-	cRegRoot = ""         && la clave de VFP (o la de la suite), con su \
+	cRegRoot = ""         && la clave de VFP (o la de las pruebas), con su \
 	cSuffix = ""          && "" en VFP 9; "-10.2" o "-10.2-x64" en VFP Advanced
 	cCurrentKey = ""      && "current" en VFP 9; "current_vfpa" o "current_vfpa64" en VFP Advanced
 	lRedirected = .F.     && cRegRoot es la de FOXDOCK_THEMES_REGISTRY_ROOT
@@ -202,7 +199,7 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 		RETURN This.oHost.Options.Set(This.cId, This.CurrentKey(), tcTheme)
 	ENDPROC
 
-	*-- tnVersion5 y tlWin64: los de este VFP si no vienen (la suite pasa los de
+	*-- tnVersion5 y tlWin64: los de este VFP si no vienen (las pruebas pasan los de
 	*-- VFP Advanced para ver su «current»).
 	PROCEDURE FindRegRoot
 		LPARAMETERS tnVersion5, tlWin64
@@ -296,7 +293,7 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 		IF LEFT(lcText, 3) == CHR(0xEF) + CHR(0xBB) + CHR(0xBF)
 			lcText = SUBSTR(lcText, 4)
 		ENDIF
-		*-- ALLTRIM quita espacios, no tabuladores ni saltos: se le dicen (vfpdocs).
+		*-- ALLTRIM quita espacios, no tabuladores ni saltos: se le dicen.
 		lcText = ALLTRIM(STRCONV(lcText, 11), 0, " ", CHR(9), CHR(13), CHR(10))
 		IF !(LEFT(lcText, 1) == "{" AND RIGHT(lcText, 1) == "}")
 			tcWhy = "it is not a JSON object"
