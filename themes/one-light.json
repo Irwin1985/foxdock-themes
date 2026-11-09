@@ -1,0 +1,17 @@
+{
+  "name": "One light",
+  "description": "The One Light palette of the Atom editor, light background.",
+  "normalFore": "#383A42",   "normalBack": "#FAFAFA",
+  "commentFore": "#A0A1A7",  "commentBack": "#FAFAFA",
+  "keywordFore": "#A626A4",  "keywordBack": "#FAFAFA",
+  "constantFore": "#986801", "constantBack": "#FAFAFA",
+  "operatorFore": "#0184BC", "operatorBack": "#FAFAFA",
+  "stringFore": "#50A14F",   "stringBack": "#FAFAFA",
+  "variableFore": "#E45649", "variableBack": "#FAFAFA",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#FAFAFA",
+  "screenFore": "#383A42",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

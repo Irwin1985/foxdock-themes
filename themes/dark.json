@@ -1,0 +1,17 @@
+{
+  "name": "Dark",
+  "description": "Light text on a dark grey background.",
+  "normalFore": "#D4D4D4",   "normalBack": "#1E1E1E",
+  "commentFore": "#6A9955",  "commentBack": "#1E1E1E",
+  "keywordFore": "#569CD6",  "keywordBack": "#1E1E1E",
+  "constantFore": "#B5CEA8", "constantBack": "#1E1E1E",
+  "operatorFore": "#D4D4D4", "operatorBack": "#1E1E1E",
+  "stringFore": "#CE9178",   "stringBack": "#1E1E1E",
+  "variableFore": "#9CDCFE", "variableBack": "#1E1E1E",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#1E1E1E",
+  "screenFore": "#D4D4D4",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

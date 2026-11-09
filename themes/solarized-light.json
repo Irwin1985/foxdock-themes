@@ -1,0 +1,17 @@
+{
+  "name": "Solarized light",
+  "description": "The Solarized palette of Ethan Schoonover, light background.",
+  "normalFore": "#657B83",   "normalBack": "#FDF6E3",
+  "commentFore": "#93A1A1",  "commentBack": "#FDF6E3",
+  "keywordFore": "#859900",  "keywordBack": "#FDF6E3",
+  "constantFore": "#D33682", "constantBack": "#FDF6E3",
+  "operatorFore": "#657B83", "operatorBack": "#FDF6E3",
+  "stringFore": "#2AA198",   "stringBack": "#FDF6E3",
+  "variableFore": "#268BD2", "variableBack": "#FDF6E3",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#FDF6E3",
+  "screenFore": "#657B83",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

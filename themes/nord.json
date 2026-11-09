@@ -1,0 +1,17 @@
+{
+  "name": "Nord",
+  "description": "The Nord palette of Arctic Ice Studio, dark blue-grey background.",
+  "normalFore": "#D8DEE9",   "normalBack": "#2E3440",
+  "commentFore": "#616E88",  "commentBack": "#2E3440",
+  "keywordFore": "#81A1C1",  "keywordBack": "#2E3440",
+  "constantFore": "#B48EAD", "constantBack": "#2E3440",
+  "operatorFore": "#81A1C1", "operatorBack": "#2E3440",
+  "stringFore": "#A3BE8C",   "stringBack": "#2E3440",
+  "variableFore": "#88C0D0", "variableBack": "#2E3440",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#2E3440",
+  "screenFore": "#D8DEE9",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

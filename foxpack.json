@@ -1,0 +1,29 @@
+{
+  "name": "foxdock-themes",
+  "kind": "foxdock-plugin",
+  "id": "themes",
+  "foxdockApi": 1,
+  "version": "0.1.0",
+  "description": "Color themes for the IDE: syntax colors, the editor font, and the font and colors of the main window",
+  "license": "MIT",
+  "files": [
+    "ThemesPlugin.prg",
+    "ThemesStrings.prg",
+    "ThemesTools.prg",
+    "themes/dark.json",
+    "themes/dracula.json",
+    "themes/github-dark.json",
+    "themes/github-light.json",
+    "themes/gruvbox-dark.json",
+    "themes/light.json",
+    "themes/monokai.json",
+    "themes/nord.json",
+    "themes/one-dark.json",
+    "themes/one-light.json",
+    "themes/solarized-dark.json",
+    "themes/solarized-light.json",
+    "themes/tokyo-night.json",
+    "themes/vfp-classic.json"
+  ],
+  "requires": []
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Tokyo Night",
+  "description": "The Tokyo Night palette of enkia, dark background.",
+  "normalFore": "#A9B1D6",   "normalBack": "#1A1B26",
+  "commentFore": "#565F89",  "commentBack": "#1A1B26",
+  "keywordFore": "#BB9AF7",  "keywordBack": "#1A1B26",
+  "constantFore": "#FF9E64", "constantBack": "#1A1B26",
+  "operatorFore": "#89DDFF", "operatorBack": "#1A1B26",
+  "stringFore": "#9ECE6A",   "stringBack": "#1A1B26",
+  "variableFore": "#7DCFFF", "variableBack": "#1A1B26",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#1A1B26",
+  "screenFore": "#A9B1D6",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

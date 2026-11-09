@@ -1,0 +1,17 @@
+{
+  "name": "Monokai",
+  "description": "The Monokai palette of Wimer Hazenberg, dark background.",
+  "normalFore": "#F8F8F2",   "normalBack": "#272822",
+  "commentFore": "#75715E",  "commentBack": "#272822",
+  "keywordFore": "#F92672",  "keywordBack": "#272822",
+  "constantFore": "#AE81FF", "constantBack": "#272822",
+  "operatorFore": "#F92672", "operatorBack": "#272822",
+  "stringFore": "#E6DB74",   "stringBack": "#272822",
+  "variableFore": "#66D9EF", "variableBack": "#272822",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#272822",
+  "screenFore": "#F8F8F2",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

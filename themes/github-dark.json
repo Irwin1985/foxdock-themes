@@ -1,0 +1,17 @@
+{
+  "name": "GitHub dark",
+  "description": "The colors of GitHub, dark background.",
+  "normalFore": "#C9D1D9",   "normalBack": "#0D1117",
+  "commentFore": "#8B949E",  "commentBack": "#0D1117",
+  "keywordFore": "#FF7B72",  "keywordBack": "#0D1117",
+  "constantFore": "#79C0FF", "constantBack": "#0D1117",
+  "operatorFore": "#FF7B72", "operatorBack": "#0D1117",
+  "stringFore": "#A5D6FF",   "stringBack": "#0D1117",
+  "variableFore": "#FFA657", "variableBack": "#0D1117",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#0D1117",
+  "screenFore": "#C9D1D9",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

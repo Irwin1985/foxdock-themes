@@ -1,0 +1,17 @@
+{
+  "name": "Dracula",
+  "description": "The Dracula palette of Zeno Rocha, dark background.",
+  "normalFore": "#F8F8F2",   "normalBack": "#282A36",
+  "commentFore": "#6272A4",  "commentBack": "#282A36",
+  "keywordFore": "#FF79C6",  "keywordBack": "#282A36",
+  "constantFore": "#BD93F9", "constantBack": "#282A36",
+  "operatorFore": "#FF79C6", "operatorBack": "#282A36",
+  "stringFore": "#F1FA8C",   "stringBack": "#282A36",
+  "variableFore": "#8BE9FD", "variableBack": "#282A36",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#282A36",
+  "screenFore": "#F8F8F2",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

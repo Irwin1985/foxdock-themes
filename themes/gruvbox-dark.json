@@ -1,0 +1,17 @@
+{
+  "name": "Gruvbox dark",
+  "description": "The Gruvbox palette of Pavel Pertsev, dark background.",
+  "normalFore": "#EBDBB2",   "normalBack": "#282828",
+  "commentFore": "#928374",  "commentBack": "#282828",
+  "keywordFore": "#FB4934",  "keywordBack": "#282828",
+  "constantFore": "#D3869B", "constantBack": "#282828",
+  "operatorFore": "#FE8019", "operatorBack": "#282828",
+  "stringFore": "#B8BB26",   "stringBack": "#282828",
+  "variableFore": "#83A598", "variableBack": "#282828",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#282828",
+  "screenFore": "#EBDBB2",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Light",
+  "description": "Dark text on white, with more colors than the classic one.",
+  "normalFore": "#000000",   "normalBack": "#FFFFFF",
+  "commentFore": "#008000",  "commentBack": "#FFFFFF",
+  "keywordFore": "#0000FF",  "keywordBack": "#FFFFFF",
+  "constantFore": "#098658", "constantBack": "#FFFFFF",
+  "operatorFore": "#000000", "operatorBack": "#FFFFFF",
+  "stringFore": "#A31515",   "stringBack": "#FFFFFF",
+  "variableFore": "#001080", "variableBack": "#FFFFFF",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#FFFFFF",
+  "screenFore": "#000000",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

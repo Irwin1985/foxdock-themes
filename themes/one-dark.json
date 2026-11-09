@@ -1,0 +1,17 @@
+{
+  "name": "One dark",
+  "description": "The One Dark palette of the Atom editor, dark background.",
+  "normalFore": "#ABB2BF",   "normalBack": "#282C34",
+  "commentFore": "#5C6370",  "commentBack": "#282C34",
+  "keywordFore": "#C678DD",  "keywordBack": "#282C34",
+  "constantFore": "#D19A66", "constantBack": "#282C34",
+  "operatorFore": "#56B6C2", "operatorBack": "#282C34",
+  "stringFore": "#98C379",   "stringBack": "#282C34",
+  "variableFore": "#E06C75", "variableBack": "#282C34",
+  "editorFont": "Consolas",
+  "editorFontSize": 10,
+  "screenFont": "Consolas",
+  "screenBack": "#282C34",
+  "screenFore": "#ABB2BF",
+  "notCovered": "The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}

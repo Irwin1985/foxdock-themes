@@ -1,0 +1,11 @@
+{
+  "name": "VFP classic",
+  "description": "The colors and the editor font of a Visual FoxPro 9 just installed: green comments, blue keywords, the rest automatic.",
+  "commentFore": "#008000",
+  "keywordFore": "#0000FF",
+  "editorFont": "Courier New",
+  "editorFontSize": 10,
+  "screenBack": "#FFFFFF",
+  "screenFore": "#000000",
+  "notCovered": "The main window font is left as it is (its factory value is not known). The editor font reaches only the program editors opened after the theme, and not at all when the FoxPro resource (FOXUSER) has its own default font (Edit > Properties > Use as default) or for a file that already has its own window record there: FoxDock does not write the resource. Not covered: the debugger windows, the Command window, the method editors of the designers and the text and memo editors (not tried with a theme)."
+}
