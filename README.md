@@ -55,10 +55,22 @@ Open themes folder
   editors: not tested with a theme.
 - VFP Advanced: each version has its own key, its own backup (`backup-10.2.json`, `backup-10.2-x64.json`) and its own current theme; a theme you set in VFP Advanced does not change VFP 9.
 
+**Your own themes go in the data folder.** The themes that come with the plugin live in its folder
+(`plugins\themes\themes\`), and the plugin center replaces that folder whole when it installs, updates or removes
+the plugin. Yours go in `%LOCALAPPDATA%\FoxDock\themes\` (the data folder): «Open themes folder» opens that one,
+and creates it if it is not there, and the plugin center never touches it. The list has both. A theme of yours
+with the id of one of the plugin (the same file name) is the one listed and applied, and the log says so once. A
+theme of yours that is still in the folder of the plugin, where earlier versions looked for them, is copied to
+your folder when the plugin starts: the one in the folder of the plugin stays, and one with that name that is
+already in your folder is never overwritten.
+
 **The backup and «Restore VFP colors».** Before the first theme, the plugin keeps in
-`<themes folder>\backup\backup.json` what each value it can write held (or that it did not exist), and
-the font and colors of `_SCREEN`. «Restore VFP colors» goes back to that, **in the open editors too**, and
-leaves the backup where it is. If you change colors by hand in Options after the first theme, «Restore»
+`%LOCALAPPDATA%\FoxDock\themes\backup\backup.json` (the data folder, not the folder of the plugin) what each
+value it can write held (or that it did not exist), and the font and colors of `_SCREEN`. «Restore VFP colors»
+goes back to that, **in the open editors too**, and leaves the backup where it is. Installing, updating or
+removing the plugin from the plugin center does not touch it. A backup that an earlier version left in
+`plugins\themes\themes\backup\` (or in `<folder>\backup\`, with the `folder` option) is copied to the data folder when the plugin starts, and stays where it was; one that
+is already in the data folder is never overwritten. If you change colors by hand in Options after the first theme, «Restore»
 goes back to what there was before the first theme, not to your changes.
 
 **Uninstalling with a theme on.** VFP paints the editors and the Command window with the colors it reads
@@ -73,9 +85,10 @@ options at once (it is the same as «Set As Default»).
 **The options** (`"options": { "themes": { ... } }`):
 - `current`: the current theme (its id, the name of the file). It is applied when the IDE starts, and
   only what is not there yet is written.
-- `folder`: another themes folder instead of `plugins\themes\themes\`.
+- `folder`: the folder of your themes instead of `%LOCALAPPDATA%\FoxDock\themes\`. The themes of the plugin are
+  listed all the same.
 
-**A theme** is a flat `.json`, in UTF-8, in that folder. Its id is the name of the file:
+**A theme** is a flat `.json`, in UTF-8, in the folder of your themes. Its id is the name of the file:
 
 ```json
 {

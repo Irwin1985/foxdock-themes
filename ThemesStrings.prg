@@ -22,7 +22,7 @@ toHost.AddString("en", "themes.appliedNoFont", "Theme {1} applied (not the edito
 toHost.AddString("en", "themes.notApplied", "The theme could not be applied: {1}")
 toHost.AddString("en", "themes.restored", "VFP colors restored")
 toHost.AddString("en", "themes.notRestored", "Nothing restored: {1}")
-toHost.AddString("en", "themes.noFolder", "The themes folder {1} does not exist")
+toHost.AddString("en", "themes.noFolder", "The themes folder {1} could not be created")
 toHost.AddString("en", "themes.folderFailed", "The themes folder could not be opened: {1}")
 
 *-- Español
@@ -37,7 +37,7 @@ toHost.AddString("es", "themes.appliedNoFont", "Tema {1} aplicado (la fuente del
 toHost.AddString("es", "themes.notApplied", "No se pudo aplicar el tema: {1}")
 toHost.AddString("es", "themes.restored", "Colores de VFP restaurados")
 toHost.AddString("es", "themes.notRestored", "No se restauró nada: {1}")
-toHost.AddString("es", "themes.noFolder", "La carpeta de temas {1} no existe")
+toHost.AddString("es", "themes.noFolder", "No se pudo crear la carpeta de temas {1}")
 toHost.AddString("es", "themes.folderFailed", "No se pudo abrir la carpeta de temas: {1}")
 
 *-- Deutsch
@@ -52,5 +52,5 @@ toHost.AddString("de", "themes.appliedNoFont", "Design {1} angewendet (nicht die
 toHost.AddString("de", "themes.notApplied", "Das Design konnte nicht angewendet werden: {1}")
 toHost.AddString("de", "themes.restored", "VFP-Farben wiederhergestellt")
 toHost.AddString("de", "themes.notRestored", "Nichts wiederhergestellt: {1}")
-toHost.AddString("de", "themes.noFolder", "Der Design-Ordner {1} existiert nicht")
+toHost.AddString("de", "themes.noFolder", "Der Design-Ordner {1} konnte nicht angelegt werden")
 toHost.AddString("de", "themes.folderFailed", "Der Design-Ordner konnte nicht geöffnet werden: {1}")

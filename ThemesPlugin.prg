@@ -3,8 +3,20 @@
 *
 * Un tema son los colores de sintaxis del editor, la fuente del editor de
 * programas y la fuente y los colores de _SCREEN. Cada uno es un .json plano
-* (UTF-8) en la carpeta themes\ del plugin, o en la de la opción
-* themes.folder. Lo que VFP guarda y cuándo lo lee:
+* (UTF-8), en uno de dos sitios:
+*
+*   - Los del paquete, en la carpeta themes\ del plugin (cPackFolder). Son
+*     los de TH_PACKAGE, y nada más.
+*   - Los del usuario, en la carpeta de datos de FoxDock, <datos>\themes\, o
+*     en la de la opción themes.folder (cFolder). No en la del plugin: esa la
+*     cambia entera quien instala, actualiza o quita el plugin.
+*
+* La lista tiene los dos; si uno del usuario tiene el id de uno del paquete,
+* manda el del usuario, y el log lo dice una vez. Un tema propio que esté en
+* la carpeta del plugin (las versiones anteriores los buscaban allí) se copia
+* a la del usuario al montar: el de allí se queda, y uno que ya esté en la del
+* usuario no se pisa. «Open themes folder» abre la del usuario, y la crea si
+* no está. Lo que VFP guarda y cuándo lo lee:
 *
 *   - Los colores de sintaxis viven en el registro (HKCU\...\9.0\Options,
 *     siete Editor*Color). Escribirlos no basta: SYS(3056, 1) los relee, y
@@ -23,10 +35,13 @@
 *     escribe (o se borra, en Restore) DESPUÉS de releer.
 *
 * Antes del primer tema se guarda lo que había (las claves que el plugin
-* escribe, las dos que crea SYS(3056, 1) y _SCREEN) en
-* <carpeta>\backup\backup.json; «Restore VFP colors» vuelve a eso y no lo
-* borra. themes.current se aplica al montar, y solo se escribe lo que no
-* está ya.
+* escribe, las dos que crea SYS(3056, 1) y _SCREEN) en la carpeta de datos
+* de FoxDock, <datos>\themes\backup\backup.json, y no en la del plugin: esa
+* la cambia entera quien instala, actualiza o quita el plugin, y la copia es
+* lo único con lo que el usuario vuelve a sus colores. Una copia que dejó
+* una versión anterior en <carpeta>\backup\ se copia allí al montar.
+* «Restore VFP colors» vuelve a la copia y no la borra. themes.current se
+* aplica al montar, y solo se escribe lo que no está ya.
 *
 * Cada VFP, lo suyo: la clave es la de la versión que
 * corre (VisualFoxPro\9.0, VisualFoxPro\10.2 o VisualFoxPro64\10.2), y VFP
@@ -60,15 +75,22 @@
 #DEFINE CRLF CHR(13) + CHR(10)
 #DEFINE TH_ELEMENTS "Comment,Keyword,Constant,Normal,Operator,String,Variable"
 #DEFINE TH_MARK "• "
+*-- Los temas que trae el paquete, los .json de la carpeta themes\ del plugin.
+*-- Un .json de esa carpeta que no está aquí es del usuario (un caso de las
+*-- pruebas compara esta lista con los ficheros).
+#DEFINE TH_PACKAGE "dark,dracula,github-dark,github-light,gruvbox-dark,light,monokai,nord,one-dark,one-light,solarized-dark,solarized-light,tokyo-night,vfp-classic"
 
 DEFINE CLASS ThemesPlugin AS PluginBase
 	cId = "themes"
 	cTitle = "Themes"
 	nOrder = 960
-	cVersion = "0.1.1"
+	cVersion = "0.1.2"
 	lWantsIdle = .T.
 
-	cFolder = ""          && la carpeta de los temas, con su \
+	cFolder = ""          && la carpeta de los temas del usuario, con su \
+	cPackFolder = ""      && la de los temas del paquete (la del plugin), con su \
+	cOverridden = ""      && los temas del usuario que mandan sobre uno del paquete, ya anotados
+	lOwnChecked = .F.     && ya se miró si había temas propios en la carpeta del plugin
 	cRegRoot = ""         && la clave de VFP (o la de las pruebas), con su \
 	cSuffix = ""          && "" en VFP 9; "-10.2" o "-10.2-x64" en VFP Advanced
 	cCurrentKey = ""      && "current" en VFP 9; "current_vfpa" o "current_vfpa64" en VFP Advanced
@@ -79,6 +101,7 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 	lScreenSet = .F.      && si la última aplicación tocó _SCREEN
 	cEditorFont = ""      && applied, alreadyApplied, overriddenByResource, notInTheme, unknown
 	cLastError = ""
+	lBackupChecked = .F.  && ya se miró si había una copia en el sitio viejo
 
 	PROCEDURE OnHostReady
 		LOCAL lcCur
@@ -92,10 +115,31 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 		RETURN .T.
 	ENDPROC
 
+	*-- Las dos carpetas: la del paquete, siempre la del plugin, y la del
+	*-- usuario, la de la opción folder o <datos>\themes\.
 	PROCEDURE FindFolder
 		LOCAL lcDir
 		lcDir = TRANSFORM(This.oHost.Options.Get(This.cId, "folder", ""))
-		This.cFolder = IIF(EMPTY(lcDir), This.cHome + "themes\", ADDBS(lcDir))
+		This.cPackFolder = This.cHome + "themes\"
+		This.cFolder = IIF(EMPTY(lcDir), This.oHost.DataDir + "themes\", ADDBS(lcDir))
+	ENDPROC
+
+	*-- Donde buscaban los temas las versiones anteriores: la opción folder o,
+	*-- sin ella, la carpeta del plugin. Allí dejaban también la copia de los colores.
+	PROCEDURE LegacyFolder
+		LOCAL lcDir
+		lcDir = TRANSFORM(This.oHost.Options.Get(This.cId, "folder", ""))
+		RETURN IIF(EMPTY(lcDir), This.cHome + "themes\", ADDBS(lcDir))
+	ENDPROC
+
+	*-- Los ids de los temas del paquete, separados por comas.
+	PROCEDURE PackageThemes
+		RETURN TH_PACKAGE
+	ENDPROC
+
+	PROCEDURE IsPackageTheme
+		LPARAMETERS tcId
+		RETURN "," + LOWER(ALLTRIM(tcId)) + "," $ "," + TH_PACKAGE + ","
 	ENDPROC
 
 	*-- La clave de las opciones de ESTE VFP (desde VFP Advanced, la de VFP 9
@@ -227,6 +271,74 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 		IF EMPTY(This.cRegRoot)
 			This.FindRegRoot()
 		ENDIF
+		IF !This.lBackupChecked
+			This.BringOldBackup()
+		ENDIF
+		IF !This.lOwnChecked
+			This.BringOwnThemes()
+		ENDIF
+	ENDPROC
+
+	*-- Una vez por montaje: cada .json de la carpeta del plugin que no es de los
+	*-- del paquete se copia a la del usuario, con su nombre. El de la carpeta del
+	*-- plugin se queda, y uno que ya esté en la del usuario no se pisa. Los nombres
+	*-- salen de Scripting.FileSystemObject: ADIR los da en mayúsculas.
+	PROCEDURE BringOwnThemes
+		LOCAL loFso, loDir, loF, lcName, lcFrom, lcTo, loErr
+		This.lOwnChecked = .T.
+		IF UPPER(This.cPackFolder) == UPPER(This.cFolder) OR !DIRECTORY(This.cPackFolder, 1)
+			RETURN
+		ENDIF
+		loFso = CREATEOBJECT("Scripting.FileSystemObject")
+		loDir = loFso.GetFolder(This.cPackFolder)
+		FOR EACH loF IN loDir.Files
+			lcName = loF.Name
+			IF !(LOWER(JUSTEXT(lcName)) == "json") OR This.IsPackageTheme(JUSTSTEM(lcName))
+				LOOP
+			ENDIF
+			lcFrom = This.cPackFolder + lcName
+			lcTo = This.cFolder + lcName
+			IF FILE(lcTo)
+				This.oHost.Log("themes: your theme " + lcFrom + " is in the folder of the plugin, which an update of the plugin " + ;
+					"replaces; it was not copied to " + This.cFolder + ", which has one with that name already")
+				LOOP
+			ENDIF
+			TRY
+				This.MakeDir(This.cFolder)
+				loFso.CopyFile(lcFrom, lcTo, .F.)
+				This.oHost.Log("themes: your theme " + lcFrom + " is in the folder of the plugin, which an update of the plugin " + ;
+					"replaces; it was copied to " + lcTo + ", and the one in the folder of the plugin stays")
+			CATCH TO loErr
+				This.oHost.LogWarn("themes: your theme " + lcFrom + " could not be copied to " + lcTo + " (" + ;
+					loErr.Message + "); it stays where it was, and it is listed from there until it is")
+			ENDTRY
+		ENDFOR
+	ENDPROC
+
+	*-- Una carpeta y las que le falten por encima. La ruta va a una variable:
+	*-- MKDIR (This.Algo()) da el error 31.
+	PROCEDURE MakeDir
+		LPARAMETERS tcDir
+		LOCAL lcDir
+		lcDir = IIF(RIGHT(tcDir, 1) == "\", LEFT(tcDir, LEN(tcDir) - 1), tcDir)
+		IF EMPTY(lcDir) OR RIGHT(lcDir, 1) == ":" OR DIRECTORY(lcDir, 1)
+			RETURN
+		ENDIF
+		This.MakeDir(JUSTPATH(lcDir))
+		MKDIR (lcDir)
+	ENDPROC
+
+	*-- La carpeta de los temas del usuario, creada si no está (la barra de abrirla).
+	PROCEDURE UserFolderReady
+		LOCAL loErr
+		This.Ready()
+		This.cLastError = ""
+		TRY
+			This.MakeDir(This.cFolder)
+		CATCH TO loErr
+			This.cLastError = "the themes folder " + This.cFolder + " could not be created: " + loErr.Message
+		ENDTRY
+		RETURN EMPTY(This.cLastError) AND DIRECTORY(This.cFolder, 1)
 	ENDPROC
 
 	*-- Relee los colores si se escribió algo y la clave es la de VFP.
@@ -241,39 +353,73 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 	* Los temas
 	*==============================================================
 
-	*-- Los temas de la carpeta, cada uno una Collection (FoxDockJson.Parse,
-	*-- claves en minúsculas) con «#id» (el nombre del fichero sin .json) y
-	*-- «#file». vfp-classic primero; los demás, por nombre de fichero. Un
-	*-- .json que no es un tema se anota una vez y se salta.
+	*-- Los temas de las dos carpetas, cada uno una Collection (FoxDockJson.Parse,
+	*-- claves en minúsculas) con «#id» (el nombre del fichero sin .json),
+	*-- «#file» y «#source» (package o user). Uno del usuario con el id de uno
+	*-- del paquete lo sustituye, y el log lo dice una vez. vfp-classic primero;
+	*-- los demás, por id. Un .json que no es un tema se anota una vez y se salta.
 	PROCEDURE ThemeList
-		LOCAL loList, lnN, lnI, loT, lcWhy, lcFile, lcBroken, lnAt
-		LOCAL ARRAY laF[1]
+		LOCAL loAll, loList, lcBroken, lnI, lnN
+		LOCAL ARRAY laIds[1]
 		This.Ready()
-		loList = CREATEOBJECT("Collection")
+		loAll = CREATEOBJECT("Collection")
 		lcBroken = ""
-		lnN = IIF(DIRECTORY(This.cFolder, 1), ADIR(laF, This.cFolder + "*.json"), 0)
-		IF lnN > 1
-			=ASORT(laF, 1)
+		This.ScanFolder(This.cPackFolder, "package", loAll, @lcBroken)
+		IF !(UPPER(This.cFolder) == UPPER(This.cPackFolder))
+			This.ScanFolder(This.cFolder, "user", loAll, @lcBroken)
+		ENDIF
+		This.cBroken = lcBroken
+		loList = CREATEOBJECT("Collection")
+		lnN = loAll.Count
+		IF lnN = 0
+			RETURN loList
+		ENDIF
+		DIMENSION laIds[lnN]
+		FOR lnI = 1 TO lnN
+			laIds[lnI] = loAll.Item(lnI).Item("#id")
+		ENDFOR
+		=ASORT(laIds)
+		IF loAll.GetKey("vfp-classic") > 0
+			loList.Add(loAll.Item("vfp-classic"), "vfp-classic")
 		ENDIF
 		FOR lnI = 1 TO lnN
-			lcFile = This.cFolder + laF[lnI, 1]
+			IF !(laIds[lnI] == "vfp-classic")
+				loList.Add(loAll.Item(laIds[lnI]), laIds[lnI])
+			ENDIF
+		ENDFOR
+		RETURN loList
+	ENDPROC
+
+	*-- Los temas de una carpeta, a toAll por su id. tcBroken junta los .json
+	*-- rotos de esta vuelta (ruta en minúsculas), para anotar cada uno una vez.
+	PROCEDURE ScanFolder
+		LPARAMETERS tcDir, tcSource, toAll, tcBroken
+		LOCAL lnN, lnI, loT, lcWhy, lcFile, lcId
+		LOCAL ARRAY laF[1]
+		lnN = IIF(DIRECTORY(tcDir, 1), ADIR(laF, tcDir + "*.json"), 0)
+		FOR lnI = 1 TO lnN
+			lcFile = tcDir + laF[lnI, 1]
 			lcWhy = ""
 			loT = This.LoadTheme(lcFile, @lcWhy)
 			IF ISNULL(loT)
-				lcBroken = lcBroken + "|" + LOWER(laF[lnI, 1])
-				IF !("|" + LOWER(laF[lnI, 1]) + "|" $ This.cBroken + "|")
+				tcBroken = tcBroken + "|" + LOWER(lcFile)
+				IF !("|" + LOWER(lcFile) + "|" $ This.cBroken + "|")
 					This.oHost.LogWarn("themes: " + lcFile + " is not a valid theme, so it is not listed: " + lcWhy)
 				ENDIF
 				LOOP
 			ENDIF
-			IF loT.Item("#id") == "vfp-classic" AND loList.Count > 0
-				loList.Add(loT, loT.Item("#id"), 1)
-			ELSE
-				loList.Add(loT, loT.Item("#id"))
+			loT.Add(tcSource, "#source")
+			lcId = loT.Item("#id")
+			IF toAll.GetKey(lcId) > 0
+				IF !("|" + lcId + "|" $ This.cOverridden)
+					This.cOverridden = This.cOverridden + "|" + lcId + "|"
+					This.oHost.Log("themes: your theme " + lcFile + " has the id of one of the package (" + ;
+						toAll.Item(lcId).Item("#file") + "); yours is the one listed and applied")
+				ENDIF
+				toAll.Remove(lcId)
 			ENDIF
+			toAll.Add(loT, lcId)
 		ENDFOR
-		This.cBroken = lcBroken
-		RETURN loList
 	ENDPROC
 
 	*-- Un tema, o .NULL. con el motivo en tcWhy.
@@ -448,7 +594,7 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 		This.lScreenSet = .F.
 		loT = This.Find(tcName)
 		IF ISNULL(loT)
-			This.cLastError = "there is no theme '" + TRANSFORM(tcName) + "' in " + This.cFolder
+			This.cLastError = "there is no theme '" + TRANSFORM(tcName) + "' in " + This.cPackFolder + " or " + This.cFolder
 			RETURN .F.
 		ENDIF
 		IF !This.EnsureBackup()
@@ -581,7 +727,68 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 		IF EMPTY(This.cRegRoot)
 			This.FindRegRoot()
 		ENDIF
-		RETURN This.cFolder + "backup\backup" + This.cSuffix + ".json"
+		IF !This.lBackupChecked
+			This.BringOldBackup()
+		ENDIF
+		RETURN This.BackupDir() + "backup" + This.cSuffix + ".json"
+	ENDPROC
+
+	*-- La carpeta de la copia: en la carpeta de datos de FoxDock, con su \.
+	PROCEDURE BackupDir
+		RETURN This.oHost.DataDir + "themes\backup\"
+	ENDPROC
+
+	*-- Donde la dejaban las versiones anteriores: <carpeta en la que buscaban
+	*-- los temas>\backup\.
+	PROCEDURE OldBackupDir
+		RETURN This.LegacyFolder() + "backup\"
+	ENDPROC
+
+	*-- Una vez por montaje y antes de leer la copia: cada backup<sufijo>.json
+	*-- del sitio viejo que no tenga ya la suya en la carpeta de datos se copia
+	*-- allí, con su restore<sufijo>.reg y su .imported. La vieja se queda donde
+	*-- estaba, y la de la carpeta de datos no se pisa nunca. Cada VFP tiene la
+	*-- suya (backup.json, backup-10.2.json...), y cada una va por su cuenta.
+	PROCEDURE BringOldBackup
+		LOCAL lcOld, lcNew, lnI, lnJ, lnN, lcName, lcSuffix, lcOther, loErr
+		LOCAL ARRAY laF[1]
+		This.lBackupChecked = .T.
+		lcOld = This.OldBackupDir()
+		lcNew = This.BackupDir()
+		IF UPPER(lcOld) == UPPER(lcNew) OR !DIRECTORY(lcOld, 1)
+			RETURN
+		ENDIF
+		lnN = ADIR(laF, lcOld + "backup*.json")
+		FOR lnI = 1 TO lnN
+			lcName = LOWER(laF[lnI, 1])
+			lcSuffix = SUBSTR(lcName, 7, LEN(lcName) - 11)
+			IF FILE(lcNew + lcName)
+				LOOP
+			ENDIF
+			TRY
+				This.MakeBackupDir()
+				COPY FILE (lcOld + lcName) TO (lcNew + lcName)
+				FOR lnJ = 1 TO 2
+					lcOther = "restore" + lcSuffix + ".reg" + IIF(lnJ = 2, ".imported", "")
+					IF FILE(lcOld + lcOther) AND !FILE(lcNew + lcOther)
+						COPY FILE (lcOld + lcOther) TO (lcNew + lcOther)
+					ENDIF
+				ENDFOR
+				This.oHost.Log("themes: the backup of the VFP colors " + lcName + " was copied from " + lcOld + ;
+					" to " + lcNew + "; the one in " + lcOld + " stays")
+			CATCH TO loErr
+				This.oHost.LogWarn("themes: the backup of the VFP colors " + lcOld + lcName + " could not be copied to " + ;
+					lcNew + " (" + loErr.Message + "); it stays where it was")
+			ENDTRY
+		ENDFOR
+	ENDPROC
+
+	*-- <datos>\themes\backup\, una carpeta detrás de otra. La ruta va a una
+	*-- variable: MKDIR (This.BackupDir()) da el error 31.
+	PROCEDURE MakeBackupDir
+		LOCAL lcDir
+		lcDir = This.BackupDir()
+		This.MakeDir(lcDir)
 	ENDPROC
 
 	*-- El .reg que deshace el tema de este VFP: restore.reg,
@@ -672,9 +879,7 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 		loJ.Put(loB, "screenForeColor", _screen.ForeColor)
 		llOk = .F.
 		TRY
-			IF !DIRECTORY(JUSTPATH(lcFile), 1)
-				MKDIR (JUSTPATH(lcFile))
-			ENDIF
+			This.MakeBackupDir()
 			STRTOFILE(STRCONV(loJ.Stringify(loB), 9), lcFile, 0)
 			llOk = .T.
 		CATCH TO loErr
@@ -844,7 +1049,7 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 		IF lnBar = 0
 			lnBar = 1
 			lcCmd = "DEFINE BAR 1 OF " + tcPopup + " PROMPT [" + ;
-				CHRTRAN(This.oHost.Translate("themes.none", This.cFolder), "[]", "()") + "] SKIP FOR .T."
+				CHRTRAN(This.oHost.Translate("themes.none", This.cPackFolder + ", " + This.cFolder), "[]", "()") + "] SKIP FOR .T."
 			&lcCmd
 		ENDIF
 		lnBar = lnBar + 1
@@ -888,9 +1093,10 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 		ENDIF
 	ENDPROC
 
+	*-- La carpeta de los temas del usuario, creada si no está.
 	PROCEDURE OpenFolder
 		LOCAL loSh, loErr
-		IF !DIRECTORY(This.cFolder, 1)
+		IF !This.UserFolderReady()
 			This.oHost.NotifyKey("themes.noFolder", This.cFolder)
 			RETURN
 		ENDIF

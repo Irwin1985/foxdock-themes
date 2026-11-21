@@ -35,6 +35,7 @@ DEFINE CLASS IdeThemesTool AS IdeTool
 			ALLTRIM(loJ.Get(toT, "editorfont", "")) + " " + TRANSFORM(INT(loJ.Get(toT, "editorfontsize", 10)))))
 		loJ.Put(loV, "notCovered", loJ.Get(toT, "notcovered", ""))
 		loJ.Put(loV, "file", toT.Item("#file"))
+		loJ.Put(loV, "source", toT.Item("#source"))
 		RETURN loV
 	ENDPROC
 ENDDEFINE
@@ -44,8 +45,9 @@ DEFINE CLASS IdeListThemesTool AS IdeThemesTool
 	ToolName = "ide_list_themes"
 	ToolDescription = "The color themes FoxDock can put on this Visual FoxPro IDE (FoxDock > Themes): each with its id (for " + ;
 		"ide_set_theme), its name, whether it is the current one, its editor font, and what it does not cover (notCovered). " + ;
-		"Also the themes folder and whether there is a backup to restore. A theme file that is not valid is not listed (the " + ;
-		"FoxDock log says why). Reads only."
+		"Each theme says where it comes from (source): package, the themes of the plugin, or user, the user's own themes " + ;
+		"folder (folder), where a theme with the id of one of the package wins. Also whether there is a backup to restore. " + ;
+		"A theme file that is not valid is not listed (the FoxDock log says why). Reads only."
 
 	FUNCTION Run(toContext)
 		LOCAL loP, loJ, loD, loList, loOut, lnI, lcCur
@@ -66,6 +68,7 @@ DEFINE CLASS IdeListThemesTool AS IdeThemesTool
 		ENDFOR
 		loD = loJ.MakeObject()
 		loJ.Put(loD, "folder", loP.cFolder)
+		loJ.Put(loD, "packageFolder", loP.cPackFolder)
 		loJ.Put(loD, "current", IIF(EMPTY(lcCur), .NULL., lcCur))
 		loJ.Put(loD, "hasBackup", FILE(loP.BackupFile()))
 		loJ.Put(loD, "count", loOut.Count)
@@ -104,7 +107,8 @@ DEFINE CLASS IdeSetThemeTool AS IdeThemesTool
 		ENDIF
 		loT = loP.Find(lcName)
 		IF ISNULL(loT)
-			RETURN THIS.Err("There is no theme '" + lcName + "' in " + loP.cFolder + ". ide_list_themes lists the ones there are.")
+			RETURN THIS.Err("There is no theme '" + lcName + "' in " + loP.cPackFolder + " or " + loP.cFolder + ;
+				". ide_list_themes lists the ones there are.")
 		ENDIF
 		IF !loP.Apply(loT.Item("#id"))
 			RETURN THIS.Err("The theme could not be applied: " + loP.cLastError)

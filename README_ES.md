@@ -55,10 +55,22 @@ Abrir la carpeta de temas
   editores de texto y de memo: no se han probado con un tema.
 - VFP Advanced: cada versión tiene su clave, su copia de seguridad (`backup-10.2.json`, `backup-10.2-x64.json`) y su tema puesto; un tema que pones en VFP Advanced no cambia VFP 9.
 
+**Tus temas van en la carpeta de datos.** Los temas que trae el plugin viven en su carpeta
+(`plugins\themes\themes\`), y el centro de plugins la cambia entera al instalar, actualizar o quitar el plugin.
+Los tuyos van en `%LOCALAPPDATA%\FoxDock\themes\` (la carpeta de datos): «Abrir la carpeta de temas» abre esa, y
+la crea si no está, y el centro de plugins no la toca nunca. La lista tiene los dos. Un tema tuyo con el id de uno
+del plugin (el mismo nombre de fichero) es el que sale en la lista y el que se aplica, y el log lo dice una vez. Un
+tema tuyo que siga en la carpeta del plugin, donde los buscaban las versiones anteriores, se copia a tu carpeta al
+arrancar el plugin: el de la carpeta del plugin se queda, y uno con ese nombre que ya esté en tu carpeta no se pisa
+nunca.
+
 **La copia de seguridad y «Restaurar los colores de VFP» (Restore VFP colors).** Antes del primer tema, el plugin guarda en
-`<themes folder>\backup\backup.json` (la carpeta de temas) lo que había en cada valor que puede escribir (o que no existía),
-y la fuente y los colores de `_SCREEN`. «Restaurar los colores de VFP» vuelve a eso, **también en los editores
-abiertos**, y deja la copia donde está. Si después del primer tema cambias colores a mano en Options,
+`%LOCALAPPDATA%\FoxDock\themes\backup\backup.json` (la carpeta de datos, no la del plugin) lo que había en cada valor
+que puede escribir (o que no existía), y la fuente y los colores de `_SCREEN`. «Restaurar los colores de VFP» vuelve a
+eso, **también en los editores abiertos**, y deja la copia donde está. Instalar, actualizar o quitar el plugin
+desde el centro de plugins no la toca. Una copia que dejó una versión anterior en `plugins\themes\themes\backup\`
+(o en `<folder>\backup\`, con la opción `folder`) se copia a la carpeta de datos al arrancar el plugin, y se queda donde estaba; la que ya está en
+la carpeta de datos no se pisa nunca. Si después del primer tema cambias colores a mano en Options,
 «Restore» vuelve a lo que había antes del primer tema, no a tus cambios.
 
 **Desinstalar con un tema puesto.** VFP pinta los editores y la ventana de comandos con los colores que lee
@@ -73,9 +85,10 @@ opciones de golpe (es lo mismo que «Set As Default»).
 **Las opciones** (`"options": { "themes": { ... } }`):
 - `current`: el tema puesto (su id, el nombre del fichero). Se aplica al arrancar el IDE, y solo se
   escribe lo que no está ya.
-- `folder`: otra carpeta de temas en vez de `plugins\themes\themes\`.
+- `folder`: la carpeta de tus temas en vez de `%LOCALAPPDATA%\FoxDock\themes\`. Los temas del plugin se listan
+  igual.
 
-**Un tema** es un `.json` plano, en UTF-8, en esa carpeta. Su id es el nombre del fichero:
+**Un tema** es un `.json` plano, en UTF-8, en la carpeta de tus temas. Su id es el nombre del fichero:
 
 ```json
 {

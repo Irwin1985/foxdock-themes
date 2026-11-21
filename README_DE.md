@@ -57,10 +57,23 @@ zurück:
   Memo-Editoren: mit einem Farbschema nicht getestet.
 - VFP Advanced: Jede Version hat ihren eigenen Schlüssel, ihre eigene Sicherung (`backup-10.2.json`, `backup-10.2-x64.json`) und ihr eigenes aktuelles Thema; ein Thema, das Sie in VFP Advanced setzen, ändert VFP 9 nicht.
 
+**Ihre eigenen Farbschemata gehören in den Datenordner.** Die Farbschemata, die das Plugin mitbringt, liegen in
+seinem Ordner (`plugins\themes\themes\`), und das Plugin-Center ersetzt diesen Ordner ganz, wenn es das Plugin
+installiert, aktualisiert oder entfernt. Ihre eigenen gehören nach `%LOCALAPPDATA%\FoxDock\themes\` (in den
+Datenordner): «Design-Ordner öffnen» öffnet diesen und legt ihn an, wenn es ihn nicht gibt, und das Plugin-Center
+berührt ihn nie. Die Liste enthält beide. Ein eigenes Farbschema mit der Id eines Farbschemas des Plugins
+(demselben Dateinamen) ist das, das aufgelistet und angewendet wird, und das Protokoll sagt es einmal. Ein eigenes
+Farbschema, das noch im Ordner des Plugins liegt, wo frühere Versionen sie suchten, wird beim Start des Plugins in
+Ihren Ordner kopiert: Das im Ordner des Plugins bleibt, und eines mit diesem Namen, das schon in Ihrem Ordner liegt,
+wird nie überschrieben.
+
 **Die Sicherung und «VFP-Farben wiederherstellen» (Restore VFP colors).** Vor dem ersten Farbschema hält das Plugin in
-`<themes folder>\backup\backup.json` fest, was in jedem Wert stand, den es schreiben kann (oder dass er
-nicht existierte), und die Schrift und die Farben von `_SCREEN`. «VFP-Farben wiederherstellen» kehrt dahin zurück,
-**auch in den offenen Editoren**, und lässt die Sicherung, wo sie ist. Wenn Sie nach dem ersten
+`%LOCALAPPDATA%\FoxDock\themes\backup\backup.json` (im Datenordner, nicht im Ordner des Plugins) fest, was in jedem
+Wert stand, den es schreiben kann (oder dass er nicht existierte), und die Schrift und die Farben von `_SCREEN`.
+«VFP-Farben wiederherstellen» kehrt dahin zurück, **auch in den offenen Editoren**, und lässt die Sicherung, wo sie
+ist. Das Plugin im Plugin-Center zu installieren, zu aktualisieren oder zu entfernen berührt sie nicht. Eine
+Sicherung, die eine frühere Version in `plugins\themes\themes\backup\` (oder mit der Option `folder` in `<folder>\backup\`) angelegt hat, wird beim Start des Plugins in den
+Datenordner kopiert und bleibt, wo sie war; eine, die schon im Datenordner liegt, wird nie überschrieben. Wenn Sie nach dem ersten
 Farbschema in den Optionen von Hand Farben ändern, kehrt «Restore» zu dem zurück, was vor dem ersten
 Farbschema war, und nicht zu Ihren Änderungen.
 
@@ -77,9 +90,10 @@ auf einmal schreiben würde (es ist dasselbe wie «Set As Default»).
 **Die Optionen** (`"options": { "themes": { ... } }`):
 - `current`: das aktuelle Farbschema (seine Id, der Name der Datei). Es wird beim Start der IDE
   angewendet, und geschrieben wird nur, was noch nicht da ist.
-- `folder`: ein anderer Ordner für die Farbschemata statt `plugins\themes\themes\`.
+- `folder`: der Ordner Ihrer Farbschemata statt `%LOCALAPPDATA%\FoxDock\themes\`. Die Farbschemata des Plugins
+  werden trotzdem aufgelistet.
 
-**Ein Farbschema** ist eine flache `.json` in UTF-8 in diesem Ordner. Seine Id ist der Name der Datei:
+**Ein Farbschema** ist eine flache `.json` in UTF-8 im Ordner Ihrer Farbschemata. Seine Id ist der Name der Datei:
 
 ```json
 {
