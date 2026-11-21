@@ -84,8 +84,12 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 	cId = "themes"
 	cTitle = "Themes"
 	nOrder = 960
-	cVersion = "0.1.2"
+	cVersion = "0.1.3"
 	lWantsIdle = .T.
+	cFolderSig = ""       && la firma de las dos carpetas cuando se llenó el menú (FolderSig)
+	nSigAt = 0            && SECONDS() de la última vez que OnIdle miró la firma
+	nSigEvery = 3         && cada cuántos segundos la mira
+	nFills = 0            && las veces que se ha llenado el menú (FillMenu)
 
 	cFolder = ""          && la carpeta de los temas del usuario, con su \
 	cPackFolder = ""      && la de los temas del paquete (la del plugin), con su \
@@ -1030,6 +1034,8 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 	PROCEDURE FillMenu
 		LPARAMETERS tcPopup
 		LOCAL loList, lnI, loT, lcCur, lcCmd, lnBar, lcName
+		This.nFills = This.nFills + 1
+		This.cFolderSig = This.FolderSig()
 		loList = This.ThemeList()
 		lcCur = This.CurrentTheme()
 		lnBar = 0
@@ -1125,6 +1131,94 @@ DEFINE CLASS ThemesPlugin AS PluginBase
 
 	PROCEDURE OnIdle
 		This.EnsureProcedures()
+		This.CheckFolders()
+	ENDPROC
+
+	*-- Un tema que se añade, se quita o cambia en una de las dos carpetas con VFP
+	*-- abierto sale en el menú sin recargar: cada nSigEvery segundos se mira la
+	*-- firma de las carpetas, y si no es la del menú se rehace. No con un menú
+	*-- desplegado (se mira otra vez en la vuelta siguiente), ni antes de que el menú
+	*-- se haya llenado una vez. Devuelve si rehízo el menú.
+	PROCEDURE CheckFolders
+		LOCAL lnNow, lcSig
+		lnNow = SECONDS()
+		IF lnNow >= This.nSigAt AND lnNow - This.nSigAt < This.nSigEvery
+			RETURN .F.
+		ENDIF
+		This.nSigAt = lnNow
+		IF This.nFills = 0
+			RETURN .F.
+		ENDIF
+		lcSig = This.FolderSig()
+		IF lcSig == This.cFolderSig OR This.MenuOpen()
+			RETURN .F.
+		ENDIF
+		This.cFolderSig = lcSig
+		This.oHost.Log("themes: the theme folders changed; FoxDock > Themes is built again")
+		This.oHost.RefreshMenu()
+		RETURN .T.
+	ENDPROC
+
+	*-- La firma de las dos carpetas: el nombre, el tamaño, la fecha y la hora de
+	*-- cada .json. Un tema que cambia de nombre dentro de su fichero cambia la hora.
+	PROCEDURE FolderSig
+		LOCAL lcSig
+		This.Ready()
+		lcSig = This.DirSig(This.cPackFolder)
+		IF !(UPPER(This.cFolder) == UPPER(This.cPackFolder))
+			lcSig = lcSig + "||" + This.DirSig(This.cFolder)
+		ENDIF
+		RETURN lcSig
+	ENDPROC
+
+	PROCEDURE DirSig
+		LPARAMETERS tcDir
+		LOCAL lnN, lnI, lcS
+		LOCAL ARRAY laF[1]
+		lcS = ""
+		lnN = IIF(!EMPTY(tcDir) AND DIRECTORY(tcDir, 1), ADIR(laF, tcDir + "*.json"), 0)
+		FOR lnI = 1 TO lnN
+			lcS = lcS + LOWER(laF[lnI, 1]) + "|" + TRANSFORM(laF[lnI, 2]) + "|" + DTOS(laF[lnI, 3]) + "|" + laF[lnI, 4] + ";"
+		ENDFOR
+		RETURN lcS
+	ENDPROC
+
+	*-- ¿Tiene el usuario un menú desplegado? POPUP() da el del menú activo, y
+	*-- Windows dice si el hilo de VFP está en modo menú (GuiFlags: GUI_INMENUMODE,
+	*-- GUI_SYSTEMMENUMODE y GUI_POPUPMENUMODE). Si no se puede saber, no.
+	PROCEDURE MenuOpen
+		LOCAL llOpen, lnFlags, loErr
+		llOpen = .F.
+		TRY
+			llOpen = !EMPTY(POPUP())
+			IF !llOpen
+				lnFlags = This.GuiFlags()
+				llOpen = lnFlags > 0 AND BITAND(lnFlags, 0x1C) # 0
+			ENDIF
+		CATCH TO loErr
+			llOpen = .F.
+		ENDTRY
+		RETURN llOpen
+	ENDPROC
+
+	*-- Los flags de GUITHREADINFO del hilo de VFP (GetGUIThreadInfo), o -1 si la
+	*-- llamada falla. La estructura mide 48 bytes en 32 bits y 72 en 64: seis
+	*-- HWND de 8 bytes en vez de 4. Los flags van en los bytes 5 a 8 en los dos.
+	PROCEDURE GuiFlags
+		LOCAL lnSize, lcG, lnFlags, loErr
+		lnFlags = -1
+		TRY
+			lnSize = IIF(This.ThisWin64(), 72, 48)
+			DECLARE INTEGER GetCurrentThreadId IN kernel32 AS ThGetThreadId
+			DECLARE INTEGER GetGUIThreadInfo IN user32 AS ThGuiThreadInfo INTEGER idThread, STRING @pgui
+			lcG = BINTOC(lnSize, "4RS") + REPLICATE(CHR(0), lnSize - 4)
+			IF ThGuiThreadInfo(ThGetThreadId(), @lcG) # 0
+				lnFlags = CTOBIN(SUBSTR(lcG, 5, 4), "4RS")
+			ENDIF
+		CATCH TO loErr
+			lnFlags = -1
+		ENDTRY
+		RETURN lnFlags
 	ENDPROC
 
 	PROCEDURE EnsureProcedures

@@ -58,7 +58,8 @@ Abrir la carpeta de temas
 **Tus temas van en la carpeta de datos.** Los temas que trae el plugin viven en su carpeta
 (`plugins\themes\themes\`), y el centro de plugins la cambia entera al instalar, actualizar o quitar el plugin.
 Los tuyos van en `%LOCALAPPDATA%\FoxDock\themes\` (la carpeta de datos): «Abrir la carpeta de temas» abre esa, y
-la crea si no está, y el centro de plugins no la toca nunca. La lista tiene los dos. Un tema tuyo con el id de uno
+la crea si no está, y el centro de plugins no la toca nunca. La lista tiene los dos, y un tema que añades, quitas o renombras en cualquiera de las dos carpetas con VFP abierto
+sale en FoxDock > Temas en unos segundos, sin recargar. Un tema tuyo con el id de uno
 del plugin (el mismo nombre de fichero) es el que sale en la lista y el que se aplica, y el log lo dice una vez. Un
 tema tuyo que siga en la carpeta del plugin, donde los buscaban las versiones anteriores, se copia a tu carpeta al
 arrancar el plugin: el de la carpeta del plugin se queda, y uno con ese nombre que ya esté en tu carpeta no se pisa

@@ -61,7 +61,8 @@ zurück:
 seinem Ordner (`plugins\themes\themes\`), und das Plugin-Center ersetzt diesen Ordner ganz, wenn es das Plugin
 installiert, aktualisiert oder entfernt. Ihre eigenen gehören nach `%LOCALAPPDATA%\FoxDock\themes\` (in den
 Datenordner): «Design-Ordner öffnen» öffnet diesen und legt ihn an, wenn es ihn nicht gibt, und das Plugin-Center
-berührt ihn nie. Die Liste enthält beide. Ein eigenes Farbschema mit der Id eines Farbschemas des Plugins
+berührt ihn nie. Die Liste enthält beide, und ein Farbschema, das Sie bei offenem VFP in einem der beiden Ordner hinzufügen,
+entfernen oder umbenennen, erscheint in wenigen Sekunden unter FoxDock > Designs, ohne neu zu laden. Ein eigenes Farbschema mit der Id eines Farbschemas des Plugins
 (demselben Dateinamen) ist das, das aufgelistet und angewendet wird, und das Protokoll sagt es einmal. Ein eigenes
 Farbschema, das noch im Ordner des Plugins liegt, wo frühere Versionen sie suchten, wird beim Start des Plugins in
 Ihren Ordner kopiert: Das im Ordner des Plugins bleibt, und eines mit diesem Namen, das schon in Ihrem Ordner liegt,

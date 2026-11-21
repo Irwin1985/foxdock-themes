@@ -58,7 +58,8 @@ Open themes folder
 **Your own themes go in the data folder.** The themes that come with the plugin live in its folder
 (`plugins\themes\themes\`), and the plugin center replaces that folder whole when it installs, updates or removes
 the plugin. Yours go in `%LOCALAPPDATA%\FoxDock\themes\` (the data folder): «Open themes folder» opens that one,
-and creates it if it is not there, and the plugin center never touches it. The list has both. A theme of yours
+and creates it if it is not there, and the plugin center never touches it. The list has both, and a theme you add, remove or rename in either folder with VFP open shows in FoxDock >
+Themes within a few seconds, without reloading. A theme of yours
 with the id of one of the plugin (the same file name) is the one listed and applied, and the log says so once. A
 theme of yours that is still in the folder of the plugin, where earlier versions looked for them, is copied to
 your folder when the plugin starts: the one in the folder of the plugin stays, and one with that name that is
